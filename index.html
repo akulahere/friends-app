@@ -12,20 +12,17 @@
             <h1>Friends App</h1>
         </div>
         <div class="filters">
-            <h2 class = 'filters-header'>Select filters:</h2>
+            <div>
+                <h2 class = 'filters-header'>Select filters:</h2>
+            </div>
             <fieldset class = filter>
                 <legend>Search</legend>
-                <input class="search-field" type="search" id="search-field" placeholder="Enter Name or City">
+                <input class="search-field" type="search" id="search-field" placeholder="Enter Name">
             </fieldset>
-            <fieldset class="filter sort-buttons">
+            <fieldset class="age-input sort-buttons">
                 <legend>Sort</legend>
                 <button class="sort-button" id="name-sort">by Name</button><br>
                 <button class="sort-button" id="age-sort">by Age</button>
-            </fieldset>
-            <fieldset class="filter age-filter">
-                <legend>Age</legend>
-                <input class="age-input" type="number" id="age-from" min="0" max="99"> -
-                <input class="age-input" type="number" id="age-to" min="0" max="99">
             </fieldset>
             <fieldset class="filter gender-filter">
                 <legend>Gender</legend>

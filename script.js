@@ -1,6 +1,40 @@
-let users;
+let allUsers;
+let currentFilteredUsers;
+const MIN_AGE = 0;
+const MAX_AGE = 99;
+const currentFilters = [];
 const nameSortButton = document.getElementById('name-sort');
 const ageSortButton = document.getElementById('age-sort');
+const genderFilter = document.querySelector('.gender-filter');
+const nameFilter = document.querySelector('.search-field');
+
+const filter = {
+  ageFrom: MIN_AGE,
+  ageTo: MAX_AGE,
+  gender: 'any',
+  nameFilter: null,
+};
+
+const filterUserByGender = (user) => user.gender === filter.gender ? true : false;
+const filterUserByAge = ({ dob: { age } }) => age >= filter.ageFrom && age <= filter.ageTo ? true : false;
+const filterUserByName = ({ name: { first, last }}) =>
+  first.concat(last).toLowerCase().includes(filter.nameFilter.toLowerCase()) ? true : false;
+
+const makeFilter = {
+  name: filterUserByName,
+  age: filterUserByAge,
+  gender: filterUserByGender,
+}
+
+
+const filterUsers = () => {
+  currentFilteredUsers = [...allUsers];
+  if (currentFilters.length > 0) {
+     currentFilters.forEach(filter => currentFilteredUsers = currentFilteredUsers.filter(user => makeFilter[filter](user)));
+  }
+}
+
+
 
 
 const getUsers = async () => {
@@ -8,7 +42,8 @@ const getUsers = async () => {
     const response = await fetch('https://randomuser.me/api/?results=100&inc=name,dob,location,email,gender,picture');
     if (response.ok) {
       const responseJson = await response.json();
-      users = responseJson.results;
+      allUsers = responseJson.results;
+      currentFilteredUsers = [...allUsers];
     } else {
       throw new Error(response.status);
     }
@@ -18,10 +53,11 @@ const getUsers = async () => {
     errorNotification.innerHTML = `Network error! Status code: ${error}`;
     document.querySelector('main').prepend(errorNotification);
   }
-  return users;
 }
 
-const renderUsers = () => {
+
+
+const renderUsers = (users) => {
   const usersList = document.querySelector('.users');
   const fragment = document.createDocumentFragment();
   if (usersList.innerHTML) usersList.innerHTML = '';
@@ -49,7 +85,7 @@ const compareByName = (a, b) => a.name.first.toLowerCase() <= b.name.first.toLow
 const compareByAge = (a, b) => a.dob.age - b.dob.age;
 
 
-const sortByName = () => {
+const sortByName = (users) => {
   if (nameSortButton.dataset.sortType !== 'A-Z') {
     nameSortButton.dataset.sortType = 'A-Z';
     users.sort((a, b) => compareByName(a, b));
@@ -57,9 +93,10 @@ const sortByName = () => {
     nameSortButton.dataset.sortType = 'Z-A';
     users.sort((a, b) => compareByName(b, a));
   }
+  return users;
 };
 
-const sortByAge = () => {
+const sortByAge = (users) => {
   if (ageSortButton.dataset.sortType !== '1-99') {
     ageSortButton.dataset.sortType = '1-99';
     users.sort((a, b) => compareByAge(a, b));
@@ -67,23 +104,54 @@ const sortByAge = () => {
     ageSortButton.dataset.sortType = '99-1';
     users.sort((a, b) => compareByAge(b, a));
   }
+  return users;
 };
 
 
 
 const initialize = async () => {
   await getUsers();
-  renderUsers();
+  renderUsers(allUsers);
 };
 
 initialize();
 
 nameSortButton.addEventListener('click', () => {
-  sortByName();
-  renderUsers();
+  sortByName(currentFilteredUsers);
+  renderUsers(currentFilteredUsers);
 });
 
 ageSortButton.addEventListener('click', () => {
-  sortByAge();
-  renderUsers();
+  sortByAge(currentFilteredUsers);
+  renderUsers(currentFilteredUsers);
 });
+
+genderFilter.addEventListener('input', ({target}) => {
+  filter.gender = target.value;
+  if (!currentFilters.includes('gender')) {
+    currentFilters.push('gender');
+  }
+  console.log(filter.gender);
+  console.log(currentFilters);
+  console.log(target.value);
+  if (target.value === 'any') {
+    currentFilters.splice(currentFilters.indexOf('gender'), 1);
+  }
+  filterUsers();
+  renderUsers(currentFilteredUsers);
+});
+
+
+nameFilter.addEventListener('input', ({target}) => {
+  filter.nameFilter = target.value;
+  if (!currentFilters.includes('name')) {
+    currentFilters.push('name');
+  }
+  if (target.value === "") {
+    currentFilters.splice(currentFilters.indexOf('name'), 1);
+  }
+  filterUsers();
+  renderUsers(currentFilteredUsers);
+})
+
+
