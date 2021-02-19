@@ -7,21 +7,45 @@
     <title>Friends App</title>
 </head>
 <body>
-<header>
-    <div class="header">
-        <h1>Friends App</h1>
-    </div>
-    <div class="filters">
+    <header>
+        <div class="header">
+            <h1>Friends App</h1>
+        </div>
+        <div class="filters">
+            <h2 class = 'filters-header'>Select filters:</h2>
+            <fieldset class = filter>
+                <legend>Search</legend>
+                <input class="search-field" type="search" id="search-field" placeholder="Enter Name or City">
+            </fieldset>
+            <fieldset class="filter sort-buttons">
+                <legend>Sort</legend>
+                <button class="sort-button" id="name-sort">by Name</button><br>
+                <button class="sort-button" id="age-sort">by Age</button>
+            </fieldset>
+            <fieldset class="filter age-filter">
+                <legend>Age</legend>
+                <input class="age-input" type="number" id="age-from" min="0" max="99"> -
+                <input class="age-input" type="number" id="age-to" min="0" max="99">
+            </fieldset>
+            <fieldset class="filter gender-filter">
+                <legend>Gender</legend>
+                <label><input class="gender-input" type="radio" name="gender" value="male" id="gender-male"> Male</label><br>
+                <label><input class="gender-input" type="radio" name="gender" value="female" id="gender-female">
+                    Female</label><br>
+                <label><input class="gender-input" type="radio" name="gender" value="any" id="gender-any" checked> Any</label>
+            </fieldset>
+        </div>
+    </header>
 
-    </div>
-</header>
+    <main>
+        <ul class="users">
 
-<main>
-    <ul class="users">
-
-    </ul>
-</main>
-<script src="script.js"></script>
+        </ul>
+    </main>
+    <footer>
+        <p> (c) 2021</p>
+    </footer>
+    <script src="script.js"></script>
 </body>
 
 </html>
