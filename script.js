@@ -5,6 +5,8 @@ const nameSortButton = document.getElementById('name-sort');
 const ageSortButton = document.getElementById('age-sort');
 const genderFilter = document.querySelector('.gender-filter');
 const nameFilter = document.querySelector('.search-field');
+const NAME_FILTER = 'name';
+const GENDER_FILTER = 'gender';
 
 const filter = {
   gender: 'any',
@@ -16,8 +18,8 @@ const filterUserByName = ({ name: { first, last }}) =>
   first.concat(last).toLowerCase().includes(filter.nameFilter.toLowerCase()) ? true : false;
 
 const makeFilter = {
-  name: filterUserByName,
-  gender: filterUserByGender,
+  [NAME_FILTER]: filterUserByName,
+  [GENDER_FILTER]: filterUserByGender,
 }
 
 const filterUsers = () => {
