@@ -7,6 +7,8 @@ const genderFilter = document.querySelector('.gender-filter');
 const nameFilter = document.querySelector('.search-field');
 const NAME_FILTER = 'name';
 const GENDER_FILTER = 'gender';
+const ASCENDING_ORDER = 'ascending';
+const DESCENDING_ORDER = 'descending';
 
 const filter = {
   gender: 'any',
@@ -26,6 +28,12 @@ const filterUsers = () => {
   currentFilteredUsers = [...allUsers];
   if (currentFilters) {
      currentFilters.forEach(filter => currentFilteredUsers = currentFilteredUsers.filter(user => makeFilter[filter](user)));
+  }
+  if (ageSortButton.classList.contains(ASCENDING_ORDER) || ageSortButton.classList.contains(DESCENDING_ORDER)) {
+    sortByAge(currentFilteredUsers);
+  }
+  if (nameSortButton.classList.contains(ASCENDING_ORDER) || nameSortButton.classList.contains(DESCENDING_ORDER)) {
+    sortByName(currentFilteredUsers);
   }
 }
 
@@ -78,30 +86,37 @@ const compareByName = (a, b) => a.name.first.toLowerCase() <= b.name.first.toLow
 const compareByAge = (a, b) => a.dob.age - b.dob.age;
 
 const sortByName = (users) => {
-  if (nameSortButton.dataset.sortType !== 'A-Z') {
-    nameSortButton.dataset.sortType = 'A-Z';
+  if (nameSortButton.classList.contains(ASCENDING_ORDER)) {
     users.sort((a, b) => compareByName(a, b));
   } else {
-    nameSortButton.dataset.sortType = 'Z-A';
     users.sort((a, b) => compareByName(b, a));
   }
   return users;
 };
 
 const sortByAge = (users) => {
-  if (ageSortButton.dataset.sortType !== '1-99') {
-    ageSortButton.dataset.sortType = '1-99';
+  if (ageSortButton.classList.contains(ASCENDING_ORDER)) {
     users.sort((a, b) => compareByAge(a, b));
   } else {
-    ageSortButton.dataset.sortType = '99-1';
     users.sort((a, b) => compareByAge(b, a));
   }
   return users;
 };
 
 const toggleSortIcon = (buttonClicked) => {
-  buttonClicked.classList.toggle('ascending');
-  buttonClicked.classList.toggle('descending');
+  if (!(buttonClicked.classList.contains(ASCENDING_ORDER) || buttonClicked.classList.contains(DESCENDING_ORDER))) {
+    buttonClicked.classList.add(ASCENDING_ORDER);
+  } else {
+    buttonClicked.classList.toggle(ASCENDING_ORDER);
+    buttonClicked.classList.toggle(DESCENDING_ORDER);
+  }
+  if (buttonClicked.nextElementSibling) {
+    buttonClicked.nextElementSibling.classList.remove(ASCENDING_ORDER);
+    buttonClicked.nextElementSibling.classList.remove(DESCENDING_ORDER);
+  } else {
+    buttonClicked.previousElementSibling.classList.remove(ASCENDING_ORDER);
+    buttonClicked.previousElementSibling.classList.remove(DESCENDING_ORDER);
+  }
 }
 
 const initialize = async () => {
@@ -110,14 +125,14 @@ const initialize = async () => {
 };
 
 nameSortButton.addEventListener('click', () => {
-  sortByName(currentFilteredUsers);
   toggleSortIcon(nameSortButton);
+  sortByName(currentFilteredUsers);
   renderUsers(currentFilteredUsers);
 });
 
 ageSortButton.addEventListener('click', () => {
-  sortByAge(currentFilteredUsers);
   toggleSortIcon(ageSortButton);
+  sortByAge(currentFilteredUsers);
   renderUsers(currentFilteredUsers);
 });
 
