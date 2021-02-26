@@ -22,7 +22,7 @@ const makeFilter = {
 
 const filterUsers = () => {
   currentFilteredUsers = [...allUsers];
-  if (currentFilters.length > 0) {
+  if (currentFilters) {
      currentFilters.forEach(filter => currentFilteredUsers = currentFilteredUsers.filter(user => makeFilter[filter](user)));
   }
 }
