@@ -99,6 +99,11 @@ const sortByAge = (users) => {
   return users;
 };
 
+const toggleSortIcon = (buttonClicked) => {
+  buttonClicked.classList.toggle('ascending');
+  buttonClicked.classList.toggle('descending');
+}
+
 const initialize = async () => {
   await getUsers();
   renderUsers(allUsers);
@@ -106,11 +111,13 @@ const initialize = async () => {
 
 nameSortButton.addEventListener('click', () => {
   sortByName(currentFilteredUsers);
+  toggleSortIcon(nameSortButton);
   renderUsers(currentFilteredUsers);
 });
 
 ageSortButton.addEventListener('click', () => {
   sortByAge(currentFilteredUsers);
+  toggleSortIcon(ageSortButton);
   renderUsers(currentFilteredUsers);
 });
 
